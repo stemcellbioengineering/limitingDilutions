@@ -1,0 +1,25 @@
+Package: limitingDilutions
+Type: Package
+Title: Maximum Likelihood Estimate of Limiting Dilution Assays
+Version: 1.0.0
+Authors@R: 
+    person("John", "Edgar", email="edgarjohnmichael@gmail.com", role = c("aut", "cre"))
+Description: Calculate the maximum likelihood estimate for a limiting dilution assay. Essentially 
+    a wrapper for the SLDAssay package that handles input data formatting and results plotting. 
+License: file LICENSE
+Imports:
+    SLDAssay,
+    dplyr,
+    ggplot2,
+    extrafont,
+    gridExtra,
+    rlang
+Suggests:
+    knitr,
+    rmarkdown
+Encoding: UTF-8
+LazyData: true
+URL: http://www.github.com/stemcellbioengineering/limitingDilutions
+BugReports: http://www.github.com/stemcellbioengineering/limitingDilutions/issues
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
