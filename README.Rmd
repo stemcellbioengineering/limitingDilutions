@@ -80,7 +80,7 @@ plotLDA(results, dilutions = "dilution")
 
 ### Including a sample name
 
-If our data frame contains a sample or group name, we can provide the column name to the `groupby` argument. The name will appear in results and be added to the plot.
+If our data frame contains a sample or group name, we can provide the column name to the `groupby` argument. The name will appear in results and be added to the plot title.
 
 ```{r, results='hide', message=TRUE, fig.width=4, fig.height=4}
 df[["sample"]] <- "SAMPLE"
@@ -114,6 +114,14 @@ results <- getMLE(df,
                   cutoff = 25)
 
 plotLDA(results, dilutions = "dilution", groupby = "sample")
+```
+
+### Comparing sample MLE
+
+The MLE and confidence interval of multiple samples can be plotted together using `plotMLE`.
+
+```{r, results='hide', message=TRUE, fig.width=3, fig.height=3}
+plotMLE(results, groupby = "sample")
 ```
 
 ## License

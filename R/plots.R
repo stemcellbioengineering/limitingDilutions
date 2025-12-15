@@ -2,7 +2,9 @@
 
 #' A custom ggplot2 theme builder.
 #'
-#' Can be added to new `ggplot2` plots using `p <- p + plot_theme()`.
+#' Can be added to new `ggplot2` plots using `p <- p + plot_theme()`. Further
+#' customization is possible by applying a new [ggplot2::theme] to the returned plot
+#' (see `?ggplot2::theme()` for details).
 #'
 #' @param font_size Font size (default: 10)
 #' @param font_family Font family (default: "sans")
@@ -64,10 +66,10 @@ plot_theme <- function(font_size=10,
 #' @returns A ggplot
 #' @import ggplot2
 plot_one <- function(df,
-                    stats,
-                    dilutions,
-                    groupby = NULL,
-                    signf_dig = 3){
+                     stats,
+                     dilutions,
+                     groupby = NULL,
+                     signf_dig = 3){
   # Label for plot
   plot_label <- paste0("MLE: ", signif(100*stats$BC_MLE, signf_dig), "%\n",
                        100*stats$CONF_LEVEL, "% CI [",
@@ -131,14 +133,22 @@ plotLDA <- function(results,
   }
   # Single plot
   if (is.null(groupby)){
-    p <- plot_one(df, stats, dilutions, groupby, signf_dig) + plot_theme(...)
+    p <- plot_one(df,
+                  stats,
+                  dilutions,
+                  groupby = groupby,
+                  signf_dig = signf_dig) + plot_theme(...)
   # Multiple plots
   }else{
     p <- lapply(unique(df[[groupby]]), function(group){
       # Select group to plot
       df_sub <- df[df[[groupby]] == group,]
       stats_sub <- stats[stats[[groupby]] == group,]
-      plot_one(df_sub, stats_sub, dilutions, group, signf_dig) + plot_theme(...)
+      plot_one(df_sub,
+               stats_sub,
+               dilutions,
+               groupby = groupby,
+               signf_dig = signf_dig) + plot_theme(...)
     })
 
     # Determine grid dimensions
@@ -163,5 +173,45 @@ plotLDA <- function(results,
                                  ncol = grid_ncol,
                                  nrow = grid_nrow))
   }
+  return (p)
+}
+
+#' Plot MLE with confidence intervals
+#'
+#' Creates a plot showing the bias-corrected MLE and the upper and lower
+#' exact confidence interval for each sample in the column specified by `groupby`.
+#'
+#' @param results Output from [getMLE()]
+#' @param groupby Character name of column containing sample or group names. Should be as provided to [getMLE()]
+#' @param mle_colour Line colour of the MLE value (default: "black")
+#' @param ci_colour Line colour of the CI box (default: "gray")
+#' @param ... Additional arguments passed to [plot_theme()]
+#' @returns A ggplot object
+#' @import ggplot2
+#' @export
+plotMLE <- function(results,
+                    groupby,
+                    width = 0.5,
+                    mle_colour = "black",
+                    ci_colour = "gray",
+                    ...){
+  # Validate input
+  if (!inherits(results, "list") | !all(names(results) %in% c("summary","statistics"))){
+    stop("Argument 'results' should be the output of 'getMLE()'")
+  }
+  # Get data to plot
+  stats <- results$statistics
+
+  # Make percentages
+  stats$BC_MLE <- 100 * stats$BC_MLE
+  stats$Exact_CI_min <- 100 * stats$Exact_CI_min
+  stats$Exact_CI_max <- 100 * stats$Exact_CI_max
+
+  # Make plot
+  p <- ggplot(stats, aes(x = !!sym(groupby), y = BC_MLE)) +
+    geom_crossbar(aes(ymin = Exact_CI_min, ymax = Exact_CI_max), width = width, middle.colour = mle_colour, box.colour = ci_colour) +
+    labs(x="", y="MLE (%)") +
+    plot_theme(...)
+
   return (p)
 }

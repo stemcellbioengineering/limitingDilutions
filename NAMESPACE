@@ -2,6 +2,7 @@
 
 export(getMLE)
 export(plotLDA)
+export(plotMLE)
 import(dplyr)
 import(ggplot2)
 importFrom(SLDAssay,get.mle)
