@@ -45,7 +45,7 @@ Using `limitingDilutions` is easy. It minimally requires a `data.frame` containi
 
 First, load the `.csv` file.
 
-```{r, echo=FALSE, results='asis'}
+```{r, results='asis'}
 library(limitingDilutions)
 
 fn <- system.file("extdata","lda.csv", package = "limitingDilutions")

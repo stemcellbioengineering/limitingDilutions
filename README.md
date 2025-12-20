@@ -51,6 +51,15 @@ designing limiting dilution assays, see (De St. Groth 1982).
 
 First, load the `.csv` file.
 
+``` r
+library(limitingDilutions)
+
+fn <- system.file("extdata","lda.csv", package = "limitingDilutions")
+df <- read.csv(fn)
+
+knitr::kable(head(df,5))
+```
+
 | dilution | count |
 |---------:|------:|
 |     1333 |    70 |
