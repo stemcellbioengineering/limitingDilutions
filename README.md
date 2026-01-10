@@ -144,12 +144,18 @@ Use the `groupby` argument to specify the column containing the sample
 identifiers. Each sample will be tested individually. A plot will be
 generated for each sample.
 
+If you want to use different cutoff values for each sample, they can be
+included in a column in the data frame. Instead of providing a numeric
+value for argument `cutoff`, provide a character column name.
+
 ``` r
 df1 <- read.csv(fn)
 df1[["sample"]] <- "SAMPLE_A"
+df1[["cutoff"]] <- 25
 
 df2 <- read.csv(fn)
 df2[["sample"]] <- "SAMPLE_B"
+df2[["cutoff"]] <- 50
 
 df <- dplyr::bind_rows(df1,df2)
 
@@ -157,7 +163,7 @@ results <- getMLE(df,
                   counts = "count", 
                   dilutions = "dilution", 
                   groupby = "sample",
-                  cutoff = 25)
+                  cutoff = "cutoff")
 ```
 
     ## Calculating MLE for SAMPLE_A...

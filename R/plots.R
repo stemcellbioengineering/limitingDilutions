@@ -75,8 +75,8 @@ plot_one <- function(df,
                        100*stats$CONF_LEVEL, "% CI [",
                        signif(100*stats$Exact_CI_min, signf_dig), "-",
                        signif(100*stats$Exact_CI_max, signf_dig), "%]\n",
-                       "GoF: p = ", signif(stats$Exact_PGOF, 4), "\n",
-                       "Cutoff: >", stats$CUTOFF, " cells")
+                       "GoF: p = ", signif(stats$Exact_PGOF, 4)) #, "\n",
+                       #"Cutoff: >", cutoff, " cells")
   if (is.null(groupby)){
     plot_title <- "Limiting Dilution"
   }else{

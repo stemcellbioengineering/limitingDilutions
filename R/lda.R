@@ -18,11 +18,11 @@ format_for_slda <- function(df, counts, dilutions, cutoff, groupby = NULL){
   }
   df <- df %>%
     group_by( !!sym(dilutions) , .add = TRUE) %>%
-    mutate(pos_wells = !!sym(counts) > cutoff) %>%
+    mutate(pos_wells = !!sym(counts) > !!sym(cutoff)) %>%
     mutate(pos = sum(pos_wells == TRUE),
            neg = sum(pos_wells == FALSE),
            replicates = n()) %>%
-    distinct(pos,neg,replicates) %>%
+    distinct(pos,neg,replicates,!!sym(cutoff)) %>%
     ungroup() %>%
     mutate(pct_neg = 100*neg/replicates)
   return (df)
@@ -80,21 +80,30 @@ getMLE <- function(df,
                     conf_level=0.95,
                     mc=15000){
   # Load df from csv or validate is data.frame
-  if (inherits(df,"character")){
+  if (is.character(df)){
     if (file.exists(df)){
       df <- read.csv(df)
     }else{
-      stop(sprintf("File does not exist: %s", df))
+      stop(sprintf("File does not exist: '%s'", df))
     }
-  }else if (!inherits(df,"data.frame")){
+  }else if (!is.data.frame(df)){
     stop("Must provide a data.frame for df")
   }
-  # Check columns exist
+  # Check counts and dilutions columns exist
   if (!(counts %in% colnames(df)) | !(dilutions %in% colnames(df))){
-    stop(sprintf("%s and %s must be column names in df", counts, dilutions))
+    stop(sprintf("'%s' and '%s' must be column names in df", counts, dilutions))
   }else if (!is.null(groupby)){
-    if (!(groupby %in% colnames(df))) stop(sprintf("%s must be a column name in df", groupby))
+    if (!(groupby %in% colnames(df))) stop(sprintf("'%s' must be a column name in df", groupby))
   }
+  # check that cutoff is a scalar or column in df
+  if (is.numeric(cutoff)){
+    if (length(cutoff) != 1) stop("Provide a single value for cutoff")
+    df["cutoff"] <- cutoff
+    cutoff <- "cutoff"
+  }else if (is.character(cutoff)){
+    if (!(cutoff %in% colnames(df))) stop(sprintf("'%s' must be a column name in df", cutoff))
+  }else{stop("Invalid value provided for cutoff: should be a single numeric value or a column name in df")}
+
   # Format for SLDAssay
   df <- format_for_slda(df,
                         counts = counts,
@@ -139,7 +148,7 @@ getMLE <- function(df,
 
   # Add to results data frame
   res["CONF_LEVEL"] <- conf_level
-  res["CUTOFF"] <- cutoff
+  #res["CUTOFF"] <- cutoff
   res["MONTE_CARLO"] <- mc
   message("Done")
   return(list(summary = df, statistics = res))
