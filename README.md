@@ -184,7 +184,7 @@ The MLE and confidence interval of multiple samples can be plotted
 together using `plotMLE`.
 
 ``` r
-plotMLE(results, groupby = "sample")
+plotMLE(results, groupby = "sample", ylim = c(0.01, 0.09))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->

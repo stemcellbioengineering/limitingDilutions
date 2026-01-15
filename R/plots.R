@@ -183,6 +183,7 @@ plotLDA <- function(results,
 #'
 #' @param results Output from [getMLE()]
 #' @param groupby Character name of column containing sample or group names. Should be as provided to [getMLE()]
+#' @param ylim Limits for y-axis c(min, max) (default: NA; set automatically)
 #' @param mle_colour Line colour of the MLE value (default: "black")
 #' @param ci_colour Line colour of the CI box (default: "gray")
 #' @param ... Additional arguments passed to [plot_theme()]
@@ -192,6 +193,7 @@ plotLDA <- function(results,
 plotMLE <- function(results,
                     groupby,
                     width = 0.5,
+                    ylim = NA,
                     mle_colour = "black",
                     ci_colour = "gray",
                     ...){
@@ -211,7 +213,9 @@ plotMLE <- function(results,
   p <- ggplot(stats, aes(x = !!sym(groupby), y = BC_MLE)) +
     geom_crossbar(aes(ymin = Exact_CI_min, ymax = Exact_CI_max), width = width, middle.colour = mle_colour, box.colour = ci_colour) +
     labs(x="", y="MLE (%)") +
+    coord_cartesian(ylim = ylim) +
     plot_theme(...)
+
 
   return (p)
 }

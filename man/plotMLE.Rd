@@ -8,6 +8,7 @@ plotMLE(
   results,
   groupby,
   width = 0.5,
+  ylim = NA,
   mle_colour = "black",
   ci_colour = "gray",
   ...
@@ -17,6 +18,8 @@ plotMLE(
 \item{results}{Output from \code{\link[=getMLE]{getMLE()}}}
 
 \item{groupby}{Character name of column containing sample or group names. Should be as provided to \code{\link[=getMLE]{getMLE()}}}
+
+\item{ylim}{Limits for y-axis c(min, max) (default: NA; set automatically)}
 
 \item{mle_colour}{Line colour of the MLE value (default: "black")}
 

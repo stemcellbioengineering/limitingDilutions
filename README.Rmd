@@ -125,7 +125,7 @@ plotLDA(results, dilutions = "dilution", groupby = "sample")
 The MLE and confidence interval of multiple samples can be plotted together using `plotMLE`.
 
 ```{r, results='hide', message=TRUE, fig.width=3, fig.height=3}
-plotMLE(results, groupby = "sample")
+plotMLE(results, groupby = "sample", ylim = c(0.01, 0.09))
 ```
 
 ## License
