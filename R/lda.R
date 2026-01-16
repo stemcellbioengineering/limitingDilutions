@@ -121,6 +121,9 @@ getMLE <- function(df,
                    monte = mc,
                    iupm = FALSE,
                    na.rm = FALSE)
+    # Add cutoff (first entry)
+    res[["cutoff"]] <- df[["cutoff"]][[1]]
+    # Format as data frame
     res <- format_results_as_df(res)
   # Get MLE per group
   }else{
@@ -137,6 +140,8 @@ getMLE <- function(df,
                          na.rm = FALSE)
       # Add group name
       res_sub[[groupby]] <- group
+      # Add cutoff (first entry)
+      res_sub[["cutoff"]] <- df_sub[["cutoff"]][[1]]
       # Format as data frame and return
       format_results_as_df(res_sub)
     })
